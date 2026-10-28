@@ -1,7 +1,7 @@
 import pandas as pd
 
 # 1. Загружаем данные с двух разных листов
-excel_file = 'tests/Допродажа для обработки_test.xlsx'
+excel_file = 'tests/Допродажа для обработки_t.xlsx'
 df_nomenclature = pd.read_excel(excel_file, sheet_name=0)
 df_upsell_rules = pd.read_excel(excel_file, sheet_name=1)
 
