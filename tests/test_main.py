@@ -2,6 +2,7 @@ import unittest
 import pandas as pd
 from processor import process_upsells
 
+
 class TestPharmacyUpsell(unittest.TestCase):
 
     def setUp(self):
@@ -38,8 +39,9 @@ class TestPharmacyUpsell(unittest.TestCase):
         # Презервативы должны отсеяться фильтром "сам себе"
         self.assertEqual(len(result), 2)
 
-        # Проверяем, что фильтр "сам себе" сработал
-        self.assertNotIn('Презервативы XL', result['препарат'].values & result['допродажа'].values)
+        # СТАЛО:
+        # Проверяем, что в итоговой таблице нет ни одной строки, где препарат — Презервативы XL
+        self.assertNotIn('Презервативы XL', result['препарат'].values)
 
     def test_empty_input(self):
         """Проверяем, что код не падает, если подать пустые таблицы."""

@@ -10,7 +10,7 @@ def main():
 
     try:
         # 1. Интерактивный выбор файла из папки tests
-        input_file = select_input_file('tests')
+        input_file = select_input_file('Входные_данные')
 
         # 2. Загрузка и обработка данных
         df_nom, df_rules = load_excel_data(input_file)
