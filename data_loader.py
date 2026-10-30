@@ -5,14 +5,12 @@ import pandas as pd
 def select_input_file(folder_path: str = 'tests') -> str:
     """Сканирует папку и предлагает пользователю выбрать Excel-файл для работы."""
     if not os.path.exists(folder_path):
-        # Если папки нет, создаем её для удобства пользователя
         os.makedirs(folder_path)
         raise FileNotFoundError(
             f"Папка '{folder_path}' не найдена. Мы создали её. "
             f"Пожалуйста, положите туда исходные Excel-файлы и запустите скрипт снова."
         )
 
-    # Ищем все файлы с расширением .xlsx (игнорируя временные файлы Excel, начинающиеся с ~$)
     files = [f for f in os.listdir(folder_path)
              if f.endswith('.xlsx') and not f.startswith('~$')]
 
