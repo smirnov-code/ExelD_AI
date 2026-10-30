@@ -3,6 +3,10 @@ import pandas as pd
 
 def process_upsells(df_nom: pd.DataFrame, df_rules: pd.DataFrame) -> pd.DataFrame:
     """Очищает данные, объединяет таблицы и фильтрует конфликты саморекомендации."""
+    required_cols = ['Наименование', 'Подкатегория']
+    if not all(col in df_nom.columns for col in required_cols):
+        raise ValueError("В первом листе Excel отсутствуют обязательные колонки: Наименование или Подкатегория")
+
     # Нормализуем ключевую колонку
     if 'Подкатегория' in df_nom.columns:
         df_nom['Подкатегория'] = df_nom['Подкатегория'].astype(str).str.strip()
