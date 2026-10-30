@@ -3,7 +3,19 @@ import pandas as pd
 
 
 def select_input_file(folder_path: str = 'tests') -> str:
-    """Сканирует папку и предлагает пользователю выбрать Excel-файл для работы."""
+    """
+        Интерактивно сканирует папку и запрашивает у пользователя выбор файла.
+
+        Args:
+            folder_path (str): Путь к директории с исходными файлами. По умолчанию 'tests'.
+
+        Returns:
+            str: Полный относительный путь к выбранному Excel-файлу.
+
+        Raises:
+            FileNotFoundError: Если папка пуста или в ней нет файлов формата .xlsx.
+        """
+
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
         raise FileNotFoundError(
@@ -36,7 +48,18 @@ def select_input_file(folder_path: str = 'tests') -> str:
 
 
 def load_excel_data(file_path: str) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Загружает номенклатуру и правила допродаж из выбранного Excel файла."""
+    """
+    Загружает номенклатуру и правила допродаж из листов выбранного Excel-файла.
+
+    Args:
+        file_path (str): Путь к целевому Excel-файлу для чтения.
+
+    Returns:
+        tuple[pd.DataFrame, pd.DataFrame]: Кортеж из двух датафреймов:
+            - Первый: Таблица номенклатуры (препараты).
+            - Второй: Таблица правил (сопутствующие товары).
+    """
+
     df_nom = pd.read_excel(file_path, sheet_name=0)
     df_rules = pd.read_excel(file_path, sheet_name=1)
 

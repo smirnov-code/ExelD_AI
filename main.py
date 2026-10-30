@@ -5,7 +5,21 @@ from data_loader import select_input_file, load_excel_data
 from processor import process_upsells
 
 
-def main():
+def main() -> None:
+    """
+    Главная управляющая функция (точка входа в приложение).
+
+    Координирует процесс интерактивного выбора файла, загрузки данных,
+    запуска бизнес-логики сопоставления и выгрузки структурированной
+    отчетности в формате Excel.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
+
     output_folder = 'Результаты'
     try:
         input_file = select_input_file('Входные_данные')
@@ -30,6 +44,8 @@ def main():
         print(f"\n🎉 Таблица успешно сгенерирована в файл: {output_file}")
         print(f"Всего создано уникальных пар для кассы: {len(df_result)}")
 
+    except KeyboardInterrupt:
+        print("\n\n👋 Выполнение скрипта прервано пользователем. Всего доброго!")
     except Exception as e:
         print(f"\n❌ Ошибка при выполнении скрипта: {e}")
 
