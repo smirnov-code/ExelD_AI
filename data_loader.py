@@ -27,7 +27,11 @@ def select_input_file(folder_path: str = 'tests') -> str:
              if f.endswith('.xlsx') and not f.startswith('~$')]
 
     if not files:
-        raise FileNotFoundError(f"В папке '{folder_path}' нет доступных Excel-файлов (.xlsx).")
+        print(f"\n❌ Ошибка: В папке '{folder_path}' не найдено файлов формата .xlsx!")
+        print("Пожалуйста, добавьте файлы для обработки и запустите программу снова.")
+        input("\nНажмите Enter для выхода...")
+        import sys
+        sys.exit()
 
     print("\n📋 Доступные файлы для обработки:")
     for idx, file_name in enumerate(files, start=1):

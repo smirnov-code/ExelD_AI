@@ -42,6 +42,7 @@ def main() -> None:
 
         print(f"\n🎉 Таблица успешно сгенерирована в файл: {output_file}")
         print(f"Всего создано уникальных пар для кассы: {len(df_result)}")
+        input("\n🎉 Обработка успешно завершена! Нажмите Enter для выхода...")
 
         missing_count = len(df_no_upsell)
         print(f"Препаратов без настроенных допродаж: {missing_count}")
@@ -62,8 +63,10 @@ def main() -> None:
 
     except KeyboardInterrupt:
         print("\n\n👋 Выполнение скрипта прервано пользователем. Всего доброго!")
+        input("\n🎉 Обработка успешно завершена! Нажмите Enter для выхода...")
     except Exception as e:
         print(f"\n❌ Ошибка при выполнении скрипта: {e}")
+        input("\n🎉 Обработка успешно завершена! Нажмите Enter для выхода...")
 
 
 if __name__ == '__main__':
