@@ -1,6 +1,6 @@
 # Pharmacy Upsell Matrix Generator
 
-![Python Version](https://shields.io)
+![Python_Version](https://shields.io)
 ![Dependencies](https://shields.io)
 ![License](https://shields.io)
 
