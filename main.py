@@ -23,8 +23,9 @@ def main() -> None:
     output_folder = 'Результаты'
     try:
         input_file = select_input_file('Входные_данные')
+        input_file = select_input_file('Входные_данные')
         df_nom, df_rules = load_excel_data(input_file)
-        df_result = process_upsells(df_nom, df_rules)
+        df_result, df_no_upsell = process_upsells(df_nom, df_rules)
 
         if not os.path.exists(output_folder):
             os.makedirs(output_folder)

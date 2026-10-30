@@ -1,43 +1,51 @@
 import pandas as pd
 
 
-def process_upsells(df_nom: pd.DataFrame, df_rules: pd.DataFrame) -> pd.DataFrame:
+def process_upsells(df_nom: pd.DataFrame, df_rules: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
-    Выполняет очистку данных, реляционное объединение таблиц по подкатегориям
-    и фильтрацию логических конфликтов саморекомендации.
+    Выполняет очистку данных, реляционное объединение таблиц по подкатегориям,
+    фильтрацию конфликтов саморекомендации и поиск препаратов без допродаж.
 
     Args:
-        df_nom (pd.DataFrame): Датафрейм номенклатуры с обязательными
-            колонками 'Наименование' и 'Подкатегория'.
-        df_rules (pd.DataFrame): Датафрейм правил сопутствующих товаров
-            с обязательными колонками 'Подкатегория' и 'Допродажа. Наименование'.
+        df_nom (pd.DataFrame): Датафрейм номенклатуры.
+        df_rules (pd.DataFrame): Датафрейм правил.
 
     Returns:
-        pd.DataFrame: Очищенная матрица рекомендаций с тремя колонками
-            ['препарат', 'допродажа', 'категория'], отсортированная и
-            готовая к выгрузке в Excel.
+        tuple[pd.DataFrame, pd.DataFrame]:
+            - Первый датафрейм: Успешно сформированные пары для кассы.
+            - Второй датафрейм: Список препаратов, для которых не нашлось допродаж.
     """
-
-    required_cols = ['Наименование', 'Подкатегория']
-    if not all(col in df_nom.columns for col in required_cols):
-        raise ValueError("В первом листе Excel отсутствуют обязательные колонки: Наименование или Подкатегория")
-
+    # Нормализуем ключевую колонку
     if 'Подкатегория' in df_nom.columns:
         df_nom['Подкатегория'] = df_nom['Подкатегория'].astype(str).str.strip()
     if 'Подкатегория' in df_rules.columns:
         df_rules['Подкатегория'] = df_rules['Подкатегория'].astype(str).str.strip()
 
+    # Удаляем дубликаты из правил допродаж
     df_rules_clean = df_rules.drop_duplicates(subset=['Подкатегория', 'Допродажа. Наименование'])
 
+    # Делаем LEFT JOIN, чтобы сохранить ВСЕ препараты с первого листа
     df_merged = pd.merge(
         df_nom[['Наименование', 'Подкатегория']],
         df_rules_clean[['Подкатегория', 'Допродажа. Наименование']],
         on='Подкатегория',
-        how='inner'
+        how='left'
     )
     df_merged.columns = ['препарат', 'категория', 'допродажа']
 
-    is_self_sale = df_merged['препарат'].str.lower().str.strip() == df_merged['допродажа'].str.lower().str.strip()
-    df_final = df_merged[~is_self_sale].copy()
+    # Отделяем препараты, для которых вообще не нашлось правил допродаж (у них в колонке 'допродажа' стоит NaN)
+    no_upsell_mask = df_merged['допродажа'].isna()
+    df_no_upsell = df_merged[no_upsell_mask][['препарат', 'категория']].drop_duplicates().copy()
 
-    return df_final[['препарат', 'допродажа', 'категория']]
+    # Из основной таблицы убираем эти пустые строки
+    df_valid = df_merged[~no_upsell_mask].copy()
+
+    # Фильтр "сам себе" (регистронезависимый)
+    is_self_sale = df_valid['препарат'].str.lower().str.strip() == df_valid['допродажа'].str.lower().str.strip()
+    df_final = df_valid[~is_self_sale].copy()
+
+    # Наводим порядок в столбцах
+    df_final = df_final[['препарат', 'допродажа', 'категория']]
+
+    return df_final, df_no_upsell
+

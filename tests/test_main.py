@@ -31,7 +31,7 @@ class TestPharmacyUpsell(unittest.TestCase):
 
     def test_successful_merge_and_filters(self):
         """Проверяем базовый merge, удаление дубликатов и фильтр 'сам себе'."""
-        result = process_upsells(self.df_nom, self.df_rules)
+        result, _ = process_upsells(self.df_nom, self.df_rules)
 
         # Ожидаем 2 строки:
         # 1. Магний B6 таб -> Глицин форте (категория: Препараты магния)
