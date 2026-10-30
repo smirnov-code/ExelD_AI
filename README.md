@@ -1,8 +1,6 @@
 # Pharmacy Upsell Matrix Generator
 
-![Python_Version](https://shields.io)
-![Dependencies](https://shields.io)
-![License](https://shields.io)
+**Python Version:** 3.10+ | **Dependencies:** pandas, openpyxl | **License:** MIT
 
 Скрипт на Python, который автоматически собирает базу сопутствующих товаров (допродаж) для аптечной сети. Он делает за пару секунд работу, которую категорийные менеджеры вручную в Excel собирали бы неделями.
 
