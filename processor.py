@@ -15,16 +15,17 @@ def process_upsells(df_nom: pd.DataFrame, df_rules: pd.DataFrame) -> tuple[pd.Da
             - Первый датафрейм: Успешно сформированные пары для кассы.
             - Второй датафрейм: Список препаратов, для которых не нашлось допродаж.
     """
-    # Нормализуем ключевую колонку
+
+    df_nom = df_nom.dropna(subset=['Наименование']).copy()
+    df_rules = df_rules.dropna(subset=['Подкатегория', 'Допродажа. Наименование']).copy()
+
     if 'Подкатегория' in df_nom.columns:
         df_nom['Подкатегория'] = df_nom['Подкатегория'].astype(str).str.strip()
     if 'Подкатегория' in df_rules.columns:
         df_rules['Подкатегория'] = df_rules['Подкатегория'].astype(str).str.strip()
 
-    # Удаляем дубликаты из правил допродаж
     df_rules_clean = df_rules.drop_duplicates(subset=['Подкатегория', 'Допродажа. Наименование'])
 
-    # Делаем LEFT JOIN, чтобы сохранить ВСЕ препараты с первого листа
     df_merged = pd.merge(
         df_nom[['Наименование', 'Подкатегория']],
         df_rules_clean[['Подкатегория', 'Допродажа. Наименование']],
